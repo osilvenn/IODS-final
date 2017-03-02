@@ -21,16 +21,16 @@ By contrastive negation, I refer to a family of constructions which combine a ne
 
 My study, which is based on data collected for my ongoing PhD project (Silvennoinen, in prep.; see also Silvennoinen, fc.), falls within the realm of corpus linguistics. Corpus linguistics studies language by using collections of naturally occurring texts that are in a machine-readable format. The name for these collections is corpus (plural: corpora). The corpus used in this study is the British National Corpus (BNC), a 100-million-word multi-genre corpus that contains both spoken and written language. Specifically, I use two sub-components of the corpus: the broadsheet newspapers component (which is about 3 million words) and a subset of the conversation component (this subset is about 250,000 words, out of 4 million words in total). The reason for the size difference is that handling the spoken data is much more laborious.  
 
-As the six examples given above show, there are actually several syntactic formats of contrastive negation. It is thus what some linguists call a construction family (Goldberg & Jackendoff). This leads us to ask why language should have this many ways of expressing essentially the same meaning. In other words, what differences do the constructions in examples 1-6 have? This is the research question, and the answer is sought from MCA.  
+As the six examples given above show, there are actually several syntactic formats of contrastive negation. It is thus what some linguists call a construction family (Goldberg & Jackendoff 2004). This leads us to ask why language should have this many ways of expressing essentially the same meaning. In other words, what differences do the constructions in examples 1-6 have? This is the research question, and the answer is sought from MCA.  
 
 ## The dataset  
 The dataset consists of 2,032 examples of the six constructions exemplified above culled from the corpus. The dataset will be referred to as `cn` in what follows. Let us have a look at the structure and dimensions of the dataset The variables that will be of interest to us are the following:  
 - `ConstructionType`: the six constructions  
-- `SemType`: the semantic type of each construct; a three-level variable whose default value is replacive (not X but Y), the other values being additive (not only X but Y) and restrictive (not X but only Y), based on whether and where there is a restrictive adverb or other restrictive element in the construct  
+- `SemType`: the semantic type of each construct; a three-level variable whose default value is replacive (*not X but Y*), the other values being additive (*not only X but Y*) and restrictive (*not X but only Y*), based on whether and where there is a restrictive adverb or other restrictive element in the construct  
 - `LogLengthDiff`: the length difference of the contrasted elements (with one added to both of them), transformed logarithmically to reduce the influence of outliers  
 - `NegType`: the type of negation, i.e. whether the negation is descriptive (ordinary) or metalinguistic (Horn 1985); in other words, does the negator negate the semantic content or is it about such aspects as pronunciation or word choice?  
 - `NegGiven`: givenness of the negated element, i.e. whether its referent (or more technically, designatum; Lambrecht 1994) has been mentioned in the previous four sentences  
-- `NegFocusCx`: the focus structure of the negative part of the construction (Lambrecht 1994, Van Valin 2005); the focus may be a full verb phrase (predicate-focus, as in I don't like it - I love it) or not (narrow-focus)  
+- `NegFocusCx`: the focus structure of the negative part of the construction (Lambrecht 1994, Van Valin 2005); the focus may be a full verb phrase (predicate-focus, as in _I don't like it - I love it_) or not (narrow-focus)  
 - `Genre`: the genre in which the construct appears in the data; there are nine values for eight sub-categories of newspaper text, plus conversation  
 
 The data was prepared in Excel and only slightly wrangled in R. The construction codes were made more informative and for some of the variables, reference levels were set manually. Unnecessary variables were omitted. The resulting data frame will be called `cn2`. Some of the wrangling (especially assigning reference levels) has been performed to facilitate other analyses performed on the same dataset, such as logistic regression. The script has been placed [here](https://github.com/osilvenn/IODS-final/blob/master/data_wrangling.R).  
@@ -48,14 +48,23 @@ Most of the variables are discrete. `NegType`, `NegGiven` and `NegFocusCx` are a
 Because most of the variables are discrete, a correlation plot could not be drawn.  
 
 ## Multiple correspondence analysis (MCA)  
+Multiple correspondence analysis (MCA) is a dimensionality reduction technique for qualitative data. It is therefore well suited for the dataset at hand, which mostly consists of discrete variables. In R, MCA is handled by the `FactoMineR` package.  
+
+A basic introduction to the use of MCA as well as other forms of correspondence analysis for linguistic data is provided in Levshina (2015: ch. 19).
 
 ## Results  
 
 ## Conclusions and discussion  
 
 ## References  
-
-
+Goldberg, Adele E. & Ray Jackendoff. 2004. The resultative as a family of constructions. _Language_ 80: 532-68.
+Horn, Laurence R. 1985. Metalinguistic negation and pragmatic ambiguity. _Language_ 61: 121-174.    
+Lambrecht, Knud. 1994. _Information Structure and Sentence Form: Topic, Focus, and the Mental Representations of Discourse Referents._ Cambridge: Cambridge University Press.  
+Levshina, Natalia. 2015. _How to do Linguistics with R: Data exploration and statistical analysis._ Amsterdam/Philadelphia: John Benjamins.  
+McCawley, James D. 1991. Contrastive negation and metalinguistic negation. _CLS_ 27: 189-206.  
+Silvennoinen fc. Not only apples but also oranges: Contrastive negation and register. In Turo Hiltunen, Joseph McVeigh & Tanja Säily (eds.), _Big and Rich Data in English Corpus Linguistics: Methods and Explorations._ (Studies in Variation, Contacts and Change in English.) Helsinki: VARIENG.  
+Silvennoinen, Olli O. In prep. Contrastive Negation: Constructional Variation within and across Languages. Doctoral dissertation.    
+Van Valin, Robert D. Jr. 2005. _Exploring the Syntax-Semantics Interface._ Cambridge: Cambridge University Press.  
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
