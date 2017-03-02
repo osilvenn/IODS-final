@@ -1,13 +1,30 @@
 ---
 title: "The final project"
-author: "Olli Silvennoinen"
-date: "2 3 2017"
+author: "Olli Silvennoinen, olli.silvennoinen@helsinki.fi"
+date: "2 March 2017"
 output: html_document
 ---
 
 # A multiple correspondence analysis of contrastive negation in English  
 ## Introduction  
-This document is the final project of the course Introduction to Open Data Science (IODS). It is a multiple correspondence analysis of corpus data in English. This introduction will give basic information on the topic and general approach. This will set the stage for the quantitative analysis in subsequent sections.
+This document is the final project of the course Introduction to Open Data Science (IODS). It is a multiple correspondence analysis of corpus data in English. This introduction will give basic information on the topic and general approach. This will set the stage for the quantitative analysis in subsequent sections.  
+
+By contrastive negation, I refer to a family of constructions which combine a negative part with an affirmative part so that the affirmative part replaces the negative one. In this study, I follow McCawley's (1991) definition, according to which contrastive negation only refers to cases in which the contrasted items fill one and the same syntactic slot; in my other work (Silvennoinen, fc.), I have sometimes operated with a wider definition. Here are some examples of what this means:  
+1. I don't like it - I love it.  
+2. She did it not once but twice.  
+3. "It's not hard work," she said, "just constant." (BNC)  
+4. Contracts of employment are agreements between employers and staff - they are not the business of goverment. (BNC)  
+5. Children should be seen and not heard.  
+6. Shaken, not stirred.  
+
+My study, which is based on data collected for my ongoing PhD project (Silvennoinen, in prep.; see also Silvennoinen, fc.), falls within the realm of corpus linguistics. Corpus linguistics studies language by using collections of naturally occurring texts that are in a machine-readable format. The name for these collections is corpus (plural: corpora). The corpus used in this study is the British National Corpus (BNC), a 100-million-word multi-genre corpus that contains both spoken and written language. Specifically, I use two sub-components of the corpus: the broadsheet newspapers component (which is about 3 million words) and a subset of the conversation component (this subset is about 250,000 words, out of 4 million words in total). The reason for the size difference is that handling the spoken data is much more laborious.  
+
+As the six examples given above show, there are actually several syntactic formats of contrastive negation. It is thus what some linguists call a construction family (Goldberg & Jackendoff). This leads us to ask why language should have this many ways of expressing essentially the same meaning. In other words, what differences do the constructions in examples 1-6 have? This is the research question, and the answer is sought from MCA.  
+
+## The dataset  
+The dataset consists of XXX examples of the six constructions exemplified above culled from the corpus. They have been coded for the following variables:  
+
+
 
 
 ```{r setup, include=FALSE}
