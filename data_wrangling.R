@@ -14,5 +14,8 @@ cn$SemType <- relevel(cn$SemType, ref = "rep")
 cn$Mode <- relevel(cn$Mode, ref = "Written")
 cn$NegGiven <- relevel(cn$NegGiven, ref = "n")
 
-# Save this as a new file
-write.table(cn, file = "/Users/ollisilvennoinen/OneDrive - University of Helsinki/cn_data_2017-02-20.txt", quote = FALSE, sep = ",", row.names = FALSE)
+# Exclude unneeded columns
+library(dplyr)
+keep_columns <- c("ConstructionType", "SemType", "LogLengthDiff", "NegType", "NegGiven", "NegFocusCx", "Genre")
+cn2 <- select(cn, one_of(keep_columns))
+str(cn2)
