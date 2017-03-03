@@ -1,91 +1,130 @@
 ---
 title: "The final project"
 author: "Olli Silvennoinen, olli.silvennoinen@helsinki.fi"
-date: "2 March 2017"
+date: "3 March 2017"
 output: html_document
 ---
 
 # A multiple correspondence analysis of contrastive negation in English  
 ## Abstract  
+This study uses multiple correspondence analysis on contrastive negation in English. Contrastive negation refers to constructions that combine a negative part with an affirmative one so that the latter replaces the former (e.g., _shaken, not stirred_). Variables that are shown to affect construction choice include the semantic type of the construction, metalinguistic negation, genre and givenness. The analysis shows that some construction types are closer to one another than others, which has implications for how we expect constructions of contrastive negation to be represented cognitively.  
 
 ## Introduction  
 This document is the final project of the course Introduction to Open Data Science (IODS). It is a multiple correspondence analysis of corpus data in English. This introduction will give basic information on the topic and general approach. This will set the stage for the quantitative analysis in subsequent sections.  
 
-By contrastive negation, I refer to a family of constructions which combine a negative part with an affirmative part so that the affirmative part replaces the negative one. In this study, I follow McCawley's (1991) definition, according to which contrastive negation only refers to cases in which the contrasted items fill one and the same syntactic slot; in my other work (Silvennoinen, fc.), I have sometimes operated with a wider definition. Here are some examples of what this means:  
-1. I don't like it - I love it.  
-2. She did it not once but twice.  
-3. "It's not hard work," she said, "just constant." (BNC)  
-4. Contracts of employment are agreements between employers and staff - they are not the business of goverment. (BNC)  
-5. Children should be seen and not heard.  
-6. Shaken, not stirred.  
+By contrastive negation, I refer to a family of constructions which combine a negative part with an affirmative part so that the affirmative part replaces the negative one. In this study, I follow McCawley's (1991) definition, according to which contrastive negation only refers to cases in which the contrasted items fill one and the same syntactic slot; in my other work (Silvennoinen, fc.), I have sometimes operated with a wider definition. Here are some examples of what this means (the names and codes of the constructions that these examples exhibit are given in parentheses after each construction):  
+1. I don't like it - I love it. (expanded negative-first, `Exp_NegAff`)  
+2. She did it **not once but twice**. (*not X but Y*, `notX_butY`)  
+3. "It's not hard work," she said, "just constant." (BNC) (*not X, Y*, `notX_Y`)  
+4. Contracts of employment are agreements between employers and staff - they are not the business of goverment. (BNC) (expanded negative-second, `Exp_AffNeg`)  
+5. Children should be **seen and not heard**. (*X and not Y*, `X_andnotY`)  
+6. Shaken, not stirred. (*X not Y*, `X_notY`)  
 
 My study, which is based on data collected for my ongoing PhD project (Silvennoinen, in prep.; see also Silvennoinen, fc.), falls within the realm of corpus linguistics. Corpus linguistics studies language by using collections of naturally occurring texts that are in a machine-readable format. The name for these collections is corpus (plural: corpora). The corpus used in this study is the British National Corpus (BNC), a 100-million-word multi-genre corpus that contains both spoken and written language. Specifically, I use two sub-components of the corpus: the broadsheet newspapers component (which is about 3 million words) and a subset of the conversation component (this subset is about 250,000 words, out of 4 million words in total). The reason for the size difference is that handling the spoken data is much more laborious.  
 
 As the six examples given above show, there are actually several syntactic formats of contrastive negation. It is thus what some linguists call a construction family (Goldberg & Jackendoff 2004). This leads us to ask why language should have this many ways of expressing essentially the same meaning. In other words, what differences do the constructions in examples 1-6 have? This is the research question, and the answer is sought from MCA.  
 
 ## The dataset  
-The dataset consists of 2,032 examples of the six constructions exemplified above culled from the corpus. The dataset will be referred to as `cn` in what follows. Let us have a look at the structure and dimensions of the dataset The variables that will be of interest to us are the following:  
-- `ConstructionType`: the six constructions  
-- `SemType`: the semantic type of each construct; a three-level variable whose default value is replacive (*not X but Y*), the other values being additive (*not only X but Y*) and restrictive (*not X but only Y*), based on whether and where there is a restrictive adverb or other restrictive element in the construct  
-- `LogLengthDiff`: the length difference of the contrasted elements (with one added to both of them), transformed logarithmically to reduce the influence of outliers  
-- `NegType`: the type of negation, i.e. whether the negation is descriptive (ordinary) or metalinguistic (Horn 1985); in other words, does the negator negate the semantic content or is it about such aspects as pronunciation or word choice?  
-- `NegGiven`: givenness of the negated element, i.e. whether its referent (or more technically, designatum; Lambrecht 1994) has been mentioned in the previous four sentences  
-- `NegFocusCx`: the focus structure of the negative part of the construction (Lambrecht 1994, Van Valin 2005); the focus may be a full verb phrase (predicate-focus, as in _I don't like it - I love it_) or not (narrow-focus)  
-- `Genre`: the genre in which the construct appears in the data; there are nine values for eight sub-categories of newspaper text, plus conversation  
+The dataset consists of 2,032 examples of the six constructions exemplified above culled from the corpus. The data was prepared in Excel and slightly wrangled in R. The construction codes were made more informative and for some of the variables, reference levels were set manually. New variables (`Neg` and `LengthDiff`) were created on the basis of old ones. Unnecessary variables were omitted. Some of the wrangling (especially assigning reference levels) has been performed to facilitate other analyses performed on the same dataset, such as logistic regression. The script has been placed [here](https://github.com/osilvenn/IODS-final/blob/master/data_wrangling.R). The dataset will be referred to as `cn2` in what follows. Let us have a look at the structure and dimensions of the dataset:  
+```{r}
+cn2 <- read.csv("/Users/ollisilvennoinen/OneDrive - University of Helsinki/cn2.csv")
+cn2 <- cn2[, -1]
+head(cn2)
+str(cn2)
+```
 
-The data was prepared in Excel and only slightly wrangled in R. The construction codes were made more informative and for some of the variables, reference levels were set manually. Unnecessary variables were omitted. The resulting data frame will be called `cn2`. Some of the wrangling (especially assigning reference levels) has been performed to facilitate other analyses performed on the same dataset, such as logistic regression. The script has been placed [here](https://github.com/osilvenn/IODS-final/blob/master/data_wrangling.R).  
+The variables that will be of interest to us are the following:  
+- `ConstructionType`: the six constructions  
+- `Neg`: whether the construction exhibits _not_-negation or _no_-negation (Tottie 1991)
+- `SemType`: the semantic type of each construct; a three-level variable whose default value is replacive (`rep`: *not X but Y*), the other values being additive (`add`: *not only X but Y*) and restrictive (`rst`: *not X but only Y*), based on whether and where there is a restrictive adverb or other restrictive element in the construct  
+- `LengthDiff`: the length difference of the contrasted elements (with one added to both of them), transformed logarithmically to reduce the influence of outliers and then binned into four categories (`low`, `mid_low`, `mid_high`, `high`)  
+- `NegType`: the type of negation, i.e. whether the negation is descriptive (ordinary) or metalinguistic (Horn 1985); in other words, does the negator negate the semantic content or is it about such aspects as pronunciation or word choice?  
+- `NegGiven`: givenness of the negated element, i.e. whether its referent (or more technically, designatum; Lambrecht 1994) has been mentioned in the previous four sentences; not given is labelled `n` and given as `g`  
+- `NegFocusCx`: the focus structure of the negative part of the construction (Lambrecht 1994); the focus may be a full verb phrase (predicate-focus or `pred`, as in _I don't like it - I love it_) or not (argument-focus or `arg`)  
+- `Genre`: the genre in which the construct appears in the data; there are nine values for eight sub-categories of newspaper text, plus conversation  
 
 ## The variables  
 In this section, I shall present the relevant variables in more detail. The visual exploration will be done using `ggpairs`.
 
 ```{r}
-cn3 <- select(cn2, -ConstructionType)
+cn3 <- dplyr::select(cn2, -c(ConstructionType))
 library(GGally)
 ggpairs(cn3)
 ```
-Most of the variables are discrete. `NegType`, `NegGiven` and `NegFocusCx` are also highly skewed; `SemType` and `Genre` have a more balanced distribution of the various levels. `LogLengthDiff` is close to normally distributed but not quite as it skews somewhat above zero.  
 
-Because most of the variables are discrete, a correlation plot could not be drawn.  
+Most of the variables are categorical. `SemType`, `NegType`, `NegGiven`, `NegFocusCx` and especially `Neg` are also highly skewed; `LengthDiff` and `Genre` have a more balanced distribution of the various levels, though even `LengthDiff` does not have a normal distribution among the four levels.   
+
+Because the variables are discrete, a correlation plot could not be drawn. Indeed, it is the point of MCA to make it easier to visualise data that would otherwise be hard to grasp.    
 
 ## Multiple correspondence analysis (MCA)  
-Multiple correspondence analysis (MCA) is a dimensionality reduction technique for qualitative data. It is therefore well suited for the dataset at hand, which mostly consists of discrete variables. In R, MCA is handled by the `FactoMineR` package.  
+Multiple correspondence analysis (MCA) is a dimensionality reduction technique for qualitative data. It is therefore well suited for the dataset at hand, which mostly consists of discrete variables. In R, MCA is handled by the `FactoMineR` package. Like all forms of dimensionality reduction, the purpose of MCA is to uncover underlying structure based on a number of variables. This makes it easier to visualise the data, thus making it more graspable.  
 
-A basic introduction to the use of MCA as well as other forms of correspondence analysis for linguistic data is provided in Levshina (2015: ch. 19).
+A basic introduction to the use of MCA as well as other forms of correspondence analysis for linguistic data is provided in Levshina (2015: ch. 19), which is applied in addition to the model given in the IODS course.  
 
 ## Results  
+Let us now move on to the analysis. First I look at the numerical results and then proceed to the visualisation.  
+
+Here is the MCA of the dataset on contrastive negation:  
+
+```{r}
+library(FactoMineR)
+mca.cn <- MCA(cn2, quali.sup = 1, graph = FALSE)
+summary(mca.cn)
+```
+
+As usual, the first two dimensions have higher and more differentiated contributions to the variance while after that the amount of variance explained by the subsequent dimensions plateaus around 6%. The first dimension is strongly associated with `SemType` and `NegType`. Dimension 2 has a more even spread of contributing factors, with `SemType`, `Neg` and `NegFocusCx` making substantial contributions. Dimension 3 is associated with `NegGiven`.    
+
+It is perhaps more illustrative to look at how each of the variables contributes to the dimensions created in the analysis, which is what will be done next using the `dimdesc` function (Levshina 2015: 377):  
+
+```{r}
+dimdesc(mca.cn)
+```
+
+The first two dimensions make most use of `SemType` and some other variables, while the third disfavours `SemType` and favours `NegGiven` instead. Dimension 1 has a positive association with additive semantics (*not only X but Y*) and metalinguistic negation. It has a negative association with restrictive semantics (*not X but only Y*), descriptive negation and conversation as a genre. This would lead it to be associated with the _not X but Y_ construction. Dimension 2 has a positive association with restrictive semantics, sports as a genre and _no_-negation as opposed to _not_-negation. Conversely, it has a negative association with replacive semantics and _not_-negation. This leads it to be associated with the _not X, Y_ construction, and negatively associated with the _X not Y_ construction. Dimension 3 has a positive association with given designata, conversation as a genre and constructs in which the affirmative part is substantially longer than the negative one. It has a negative association with constructs in which the negative part is somewhat longer than the affirmative one and whose negative parts have a non-given designatum. However, this dimension does not have a particularly strong association with any construction type.  
+
+Here is a first stab at a visualisation in terms of the first two dimensions:  
+
+```{r}
+plot(mca.cn, , cex = 0.7, invis = "ind", col.var = "darkgrey", col.quali.sup = "black")
+```
+
+We can notice that the expanded constructions are close to one another, as are _X and not Y_ and _X not Y_. This leads us to ask whether particularly the latter pair can be considered to distinct cognitive representations. For this reason, I produced a visualisation with 95% confidence ellipses around the centroids of the construction types:  
+
+```{r}
+plotellipses(mca.cn, keepvar = 1, label = "quali")
+```
+
+The visualisation with confidence ellipses suggests that the expanded constructions are separate but the two other constructions are not: the ellipse of _X not Y_ is basically subsumed in that of _X and not Y_. This indicates that the latter two might not be clearly differentiated as linguistic representations for most speakers of English.  
+
+As a final visualisation, I follow Levshina (2015: 381) in producing confidence ellipses also around the exemplars of the constructions. This allows us to gauge the overlap among the constructions, or, in other words, the degree of synonymy among them (if synonymy is operationalised in terms of the way in which constructions are used so that the more similar the patters of use, the higher the degree of synonymy).  
+
+```{r}
+plotellipses(mca.cn, means = FALSE, keepvar = 1, label = "quali")
+```
+
+As expected for constructions that are highly schematic both formally and semantically, the overlaps are large. Therefore, we may conclude that the constructions are highly synonymous.  
+
+Before leaving the discussion of contrastive negation and MCA, I should say something about how valid the analysis is. Levshina (2015: 383-5) suggests checking the validity of the analysis by means of logistic regression in which the predictors are the dimensions produced by MCA. Since this is a multinomial situation (i.e., there are more than two levels in the outcome variable, `ConstructionType`), I must use multinomial logistic regression. Therefore, I resort to the `mlogit` function in the package of the same name. This requires first creating vectors of the first two dimensions and then using these vectors as predictors, following the model given in Levshina (2015: 383). These are then used to produce the logistic regression, as shown in Levshina (2015: 279-83):  
+
+```{r}
+cn2$Dim1 <- mca.cn$ind$coord[, 1]
+cn2$Dim2 <- mca.cn$ind$coord[, 2]
+library(mlogit)
+cn4 <- mlogit.data(cn2, shape = "wide", choice = "ConstructionType")
+m <- mlogit(ConstructionType ~ 1 | Dim1 + Dim2, data = cn4, reflevel = 1)
+summary(m)
+```
+
+Several coefficients emerge as very highly significant. McFadden's R2 is around 0.15, which is below even the reference value for a very good fit. The p-value of the likelihood ratio test is very small, which also suggests that the model is statistically significant. This suggests that the MCA performed on the data is valid.  
 
 ## Conclusions and discussion  
+This study has shown that multiple correspondence analysis can be used in corpus linguistics to achieve results that are both statistically significant and linguistically meaningful. The analysis shows that some of the construction types in the family of contrastive negation are closer to one another than others, and some construction types may even be cognitively un- or under-differentiated. However, more research is needed on this point, since corpus data models linguistic behaviour on the community level while cognitive representations are a matter of the individual level. This notwithstanding, the results are interesting in and of themselves.  
 
 ## References  
-Goldberg, Adele E. & Ray Jackendoff. 2004. The resultative as a family of constructions. _Language_ 80: 532-68.
+Goldberg, Adele E. & Ray Jackendoff. 2004. The resultative as a family of constructions. _Language_ 80: 532-68.  
 Horn, Laurence R. 1985. Metalinguistic negation and pragmatic ambiguity. _Language_ 61: 121-174.    
 Lambrecht, Knud. 1994. _Information Structure and Sentence Form: Topic, Focus, and the Mental Representations of Discourse Referents._ Cambridge: Cambridge University Press.  
 Levshina, Natalia. 2015. _How to do Linguistics with R: Data exploration and statistical analysis._ Amsterdam/Philadelphia: John Benjamins.  
 McCawley, James D. 1991. Contrastive negation and metalinguistic negation. _CLS_ 27: 189-206.  
-Silvennoinen fc. Not only apples but also oranges: Contrastive negation and register. In Turo Hiltunen, Joseph McVeigh & Tanja Säily (eds.), _Big and Rich Data in English Corpus Linguistics: Methods and Explorations._ (Studies in Variation, Contacts and Change in English.) Helsinki: VARIENG.  
+Silvennoinen, Olli O. Forthcoming. Not only apples but also oranges: Contrastive negation and register. In Turo Hiltunen, Joseph McVeigh & Tanja Säily (eds.), _Big and Rich Data in English Corpus Linguistics: Methods and Explorations._ (Studies in Variation, Contacts and Change in English.) Helsinki: VARIENG.  
 Silvennoinen, Olli O. In prep. Contrastive Negation: Constructional Variation within and across Languages. Doctoral dissertation.    
-Van Valin, Robert D. Jr. 2005. _Exploring the Syntax-Semantics Interface._ Cambridge: Cambridge University Press.  
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
