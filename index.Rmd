@@ -33,7 +33,7 @@ head(cn2)
 str(cn2)
 ```
 
-The variables that will be of interest to us are the following:  
+The variables are the following:  
 - `ConstructionType`: the six constructions  
 - `Neg`: whether the construction exhibits _not_-negation or _no_-negation (Tottie 1991)
 - `SemType`: the semantic type of each construct; a three-level variable whose default value is replacive (`rep`: *not X but Y*), the other values being additive (`add`: *not only X but Y*) and restrictive (`rst`: *not X but only Y*), based on whether and where there is a restrictive adverb or other restrictive element in the construct  
@@ -52,7 +52,7 @@ library(GGally)
 ggpairs(cn3)
 ```
 
-Most of the variables are categorical. `SemType`, `NegType`, `NegGiven`, `NegFocusCx` and especially `Neg` are also highly skewed; `LengthDiff` and `Genre` have a more balanced distribution of the various levels, though even `LengthDiff` does not have a normal distribution among the four levels.   
+As the use of MCA dictates, the variables are discrete. `SemType`, `NegType`, `NegGiven`, `NegFocusCx` and especially `Neg` are also highly skewed; `LengthDiff` and `Genre` have a more balanced distribution of the various levels, though even `LengthDiff` does not have a normal distribution among the four levels.   
 
 Because the variables are discrete, a correlation plot could not be drawn. Indeed, it is the point of MCA to make it easier to visualise data that would otherwise be hard to grasp.    
 
